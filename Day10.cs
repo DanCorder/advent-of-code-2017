@@ -56,8 +56,13 @@ namespace advent_of_code_2017
 
         public static string SolveProblem2()
         {
+            return KnotHash(Problem1Input);
+        }
+
+        public static string KnotHash(string input)
+        {
             var standardSuffix = new int[17, 31, 73, 47, 23];
-            var lengths = generateLengths(Problem1Input);
+            var lengths = generateLengths(input);
 
             var list = Enumerable.Range(0, 256).ToArray();
             var currentPosition = 0;
