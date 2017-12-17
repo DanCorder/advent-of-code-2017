@@ -4,6 +4,7 @@ namespace advent_of_code_2017
     using System.Linq;
     using System.Collections.Generic;
 
+    // Optimised brute force solution, runs in under an hour on my laptop.
     public class Day16
     {
         //private const string Problem1Input = "s1,x3/4,pe/b";
@@ -47,8 +48,8 @@ namespace advent_of_code_2017
             return String.Join("", positions);
         }
 
-        // I've reduced the number of dance move by about 75%, but I can't see a way to optimise the partner moves.
-        // This would still take about 4 days to complete on my desktop PC.
+        // I've reduced the number of dance moves from 10000 to 15 per dance
+        // this now takes under 1 hour to complete on my laptop.
         public static string SolveProblem2()
         {
             var positions = "abcdefghijklmnop".Select(c => c).ToArray();
@@ -86,7 +87,9 @@ namespace advent_of_code_2017
                     positions2 = move.Dance(positions2);
                 }
 
-                if (i % 10000 == 0)
+                //Console.WriteLine(String.Join("", positions2));
+
+                if (i % 1000000 == 0)
                 {
                     Console.WriteLine(DateTime.Now);
                     Console.WriteLine(i);
@@ -98,7 +101,6 @@ namespace advent_of_code_2017
 
         private static List<DanceMove> OptimiseMoves(List<DanceMove> moves)
         {
-
             var betterMoves = new List<DanceMove>();
             var totalSpinDistance = 0;
 
@@ -130,17 +132,42 @@ namespace advent_of_code_2017
                 }
             }
             betterMoves.Add(ReduceExchanges(exchanges));
-            betterMoves.AddRange(partners);
+            betterMoves.AddRange(ReducePartners(partners));
             betterMoves.Add(new Spin(totalSpinDistance));
 
             return betterMoves;
+        }
+
+        private static List<Partner> ReducePartners(List<Partner> partners)
+        {
+            var start = "abcdefghijklmnop";
+            var dryRun = start.Select(c => c).ToArray();
+
+            foreach(var p in partners)
+            {
+                dryRun = p.Dance(dryRun);
+            }
+
+            var newPartners = new List<Partner>();
+            var optimisedResult = start.Select(c => c).ToArray();
+            for (int i=0; i<16; i++)
+            {
+                if (optimisedResult[i] != dryRun[i])
+                {
+                    var newPartner = new Partner(optimisedResult[i], dryRun[i]);
+                    newPartners.Add(newPartner);
+                    optimisedResult = newPartner.Dance(optimisedResult);
+                }
+            }
+
+            return newPartners;
         }
 
         private static MassMove ReduceExchanges(List<Exchange> exchanges)
         {
             var start = "abcdefghijklmnop";
             var dummy = start.Select(c => c).ToArray();
-            
+
             foreach(var ex in exchanges)
             {
                 dummy = ex.Dance(dummy);
@@ -155,8 +182,6 @@ namespace advent_of_code_2017
             return new MassMove(previousPositions);
         }
     }
-
-    
 
     abstract class DanceMove
     {
