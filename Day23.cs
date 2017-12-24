@@ -243,7 +243,7 @@ jnz 1 -23";
             SetValue('e', "2", registerValues);
 
             var loopTarget = GetValue("b", registerValues);
-            var loopStart = 2;
+            // var loopStart = 2;
 
             // for b between 108400 and 125400
             // b += 17
