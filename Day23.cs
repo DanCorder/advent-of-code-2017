@@ -274,3 +274,53 @@ jnz 1 -23";
         }
     }
 }
+
+// set b 84
+// set c b
+// jnz a 2
+// jnz 1 5
+// mul b 100
+// sub b -100000
+// set c b
+// sub c -17000
+// set f 1            <== Loop c
+// set d 2
+// set e 2   << b
+// set g d   << a (g = (d * e) - b
+// mul g e
+// sub g b
+// jnz g 2
+// set f 0  <== if (d * e) - b = 0 { f = 0 }
+// sub e -1   e++
+// set g e
+// sub g b   <== exit when g = e = b = 108400
+// jnz g -8   <== loop a
+// sub d -1       < d++
+// set g d
+// sub g b  <== exit when g = d = b
+// jnz g -13  <== loop b
+// jnz f 2
+// sub h -1  < h++
+// set g b
+// sub g c
+// jnz g 2      <== if b = c exit program
+// jnz 1 3
+// sub b -17
+// jnz 1 -23   <== loop c
+
+// loop a start
+// a = 1
+// b = 108400
+// c = 125400
+// f = 1
+// g = 2
+// d = 2
+// e = 2
+
+// a = 1
+// b = 108400
+// c = 125400
+// f = 1
+// d = 2
+// e = 3
+// g = -108397
